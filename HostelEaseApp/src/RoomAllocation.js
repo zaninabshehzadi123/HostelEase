@@ -1,54 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Background from './Background';
 import Btn from './Btn';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
+
+console.log('Reached room allocaion screen:');
 const RoomAllocation = () => {
-  const [selectedValue, setSelectedValue] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedRoomCategory, setSelectedRoomCategory] = useState(null);
+  const [data, setData] = useState([]);
   const navigation = useNavigation();
 
-  const items = [
+  const categories = [
     { label: 'Item 1', value: 'item1' },
     { label: 'Item 2', value: 'item2' },
     { label: 'Item 3', value: 'item3' },
   ];
 
+  const roomCategories = [
+    { label: 'Room 1', value: 'room1' },
+    { label: 'Room 2', value: 'room2' },
+    { label: 'Room 3', value: 'room3' },
+  ];
+  useEffect(() => {
+    const machineIp = '192.168.43.185';
+  
+    const fetchData = async () => {
+      try {
+        console.log('Entered in try');
+        const response = await axios.get(`http://${machineIp}:3001/api/test2`);
+        setData(response.data);
+        console.log('Data fetched from the server:', response.data);
+      } catch (error) {
+        console.log('Entered in catch');
+        console.error('Error fetching data:', error.message);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Room Allotment</Text>
+
       <Text style={styles.subHeading}>Select Category</Text>
       <DropDownPicker
-        items={items}
-        defaultValue={selectedValue}
+        items={categories}
+        defaultValue={selectedCategory}
         containerStyle={{ height: 40 }}
         style={{ backgroundColor: '#fafafa' }}
-        itemStyle={{
-          justifyContent: 'flex-start',
-        }}
+        itemStyle={{ justifyContent: 'flex-start' }}
         dropDownStyle={{ backgroundColor: '#fafafa' }}
-        onChangeItem={(item) => setSelectedValue(item.value)}
-        placeholder="Select an item"
+        onChangeItem={(item) => setSelectedCategory(item.value)}
+        placeholder="Select a category"
       />
-       <Text style={styles.subHeading}>Select Room Category</Text>
-       <DropDownPicker
-        items={items}
-        defaultValue={selectedValue}
+
+      <Text style={styles.subHeading}>Select Room Category</Text>
+      <DropDownPicker
+        items={roomCategories}
+        defaultValue={selectedRoomCategory}
         containerStyle={{ height: 40 }}
         style={{ backgroundColor: '#fafafa' }}
-        itemStyle={{
-          justifyContent: 'flex-start',
-        }}
+        itemStyle={{ justifyContent: 'flex-start' }}
         dropDownStyle={{ backgroundColor: '#fafafa' }}
-        onChangeItem={(item) => setSelectedValue(item.value)}
-        placeholder="Select an item"
+        onChangeItem={(item) => setSelectedRoomCategory(item.value)}
+        placeholder="Select a room category"
       />
-      <View style={styles.marginTop=20}>
-      <Btn 
+
+      <View style={{ marginTop: 20 }}>
+        <Btn 
           bgColor="darkgreen"
           textColor="white"
-          marginTop='20'
           btnLabel="Proceed to Booking"
           Press={() => {
             navigation.navigate('RoomAllocationScreen2');
@@ -56,7 +81,14 @@ const RoomAllocation = () => {
             // You may want to navigate to another screen or perform further actions
           }}
         />
-        </View>
+      </View>
+
+      <View>
+        <Text>Data from PostgreSQL:</Text>
+        {data.map(item => (
+          <Text key={item.id}>{item.name}</Text>
+        ))}
+      </View>
     </View>
   );
 };
@@ -82,9 +114,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
-  Btn: {
-    marginTop: 20,
-  }
 });
 
 export default RoomAllocation;

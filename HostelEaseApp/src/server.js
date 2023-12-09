@@ -5,22 +5,37 @@ const app = express();
 const port = 3001;
 
 const pool = new Pool({
-  user: 'your_database_user',
+  user: 'postgres',
   host: 'localhost',
-  database: 'your_database_name',
-  password: 'your_database_password',
-  port: 5432,
+  database: 'HostelEase',
+  password: 'admin',
+  port: 3001,
 });
 
-app.get('/api/data', async (req, res) => {
+app.use(express.json());
+
+
+// New code for PostgreSQL integration
+pool.connect()
+  .then(() => {
+    console.log('Database connected');
+  })
+  .catch(error => {
+    console.error('Error connecting to database:', error.message);
+  });
+
+// New code for PostgreSQL integration
+app.get('/api/test2', async (req, res) => {
   const client = await pool.connect();
   try {
-    const result = await client.query('SELECT * FROM your_table');
+    const result = await client.query('SELECT * FROM test2');
     res.json(result.rows);
   } finally {
     client.release();
   }
 });
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

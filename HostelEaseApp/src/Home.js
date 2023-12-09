@@ -3,6 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
 import { darkGreen, green } from './Constants';
+import axios from 'axios';
 
 const Home = (props) => {
   return (
@@ -15,6 +16,9 @@ const Home = (props) => {
     </Background>
   );
 }
+
+
+
 
 const styles = StyleSheet.create({
   container: {
