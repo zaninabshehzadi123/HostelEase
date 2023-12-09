@@ -5,8 +5,6 @@ import Btn from './Btn';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
-
-console.log('Reached room allocaion screen:');
 const RoomAllocation = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedRoomCategory, setSelectedRoomCategory] = useState(null);
@@ -24,21 +22,21 @@ const RoomAllocation = () => {
     { label: 'Room 2', value: 'room2' },
     { label: 'Room 3', value: 'room3' },
   ];
+
   useEffect(() => {
+    // Use the IP address of your machine where the Express server is running
     const machineIp = '192.168.43.185';
-  
+
     const fetchData = async () => {
       try {
-        console.log('Entered in try');
-        const response = await axios.get(`http://${machineIp}:3001/api/test2`);
+        const response = await axios.get(`http://${machineIp}:5432/api/test2`);
         setData(response.data);
         console.log('Data fetched from the server:', response.data);
       } catch (error) {
-        console.log('Entered in catch');
         console.error('Error fetching data:', error.message);
       }
     };
-  
+
     fetchData();
   }, []);
 
