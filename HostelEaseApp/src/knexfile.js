@@ -4,8 +4,8 @@ module.exports = {
       database: 'HostelEase',
       user: 'postgres',
       password: 'admin',
-      host: 'localhost',
-      port: 5432,
+      host: '192.168.43.185',
+      port: 3001,
     },
   };
   
