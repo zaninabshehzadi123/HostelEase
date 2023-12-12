@@ -273,7 +273,7 @@ const StudentPortfolio = () => {
     
     style={{
       background: 'linear-gradient(45deg, #808080, #001f3f)', // Gradient of grey and dark blue
-      color: 'blue', // Custom text color
+      color: 'white', // Custom text color
       border: '1px solid darkred', // Custom border
       borderRadius: '5px', // Custom border radius
       fontSize: '18px', // Custom font size
@@ -296,7 +296,7 @@ const StudentPortfolio = () => {
                   {Array.from({ length: totalPageCount }, (_, i) => (
                     <li
                       key={i}
-                      className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}
+                      className={`page-item ${currentPage === i + 2 ? 'active' : ''}`}
                       onClick={() => handlePageChange(i + 1)}
                     >
                       <span className="page-link">{i + 1}</span>
