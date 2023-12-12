@@ -17,6 +17,7 @@ const RoomAllocationScreen2 = () => {
   ];
 
 
+
   return (
       <View style={styles.container}>
         <Text style={styles.heading}>Jinnah Hall</Text>
@@ -33,6 +34,8 @@ const RoomAllocationScreen2 = () => {
         onChangeItem={(item) => setSelectedValue(item.value)}
         placeholder=" "
       />
+
+
         {/* Check Status Button */}
         <Btn
           bgColor="darkgreen"

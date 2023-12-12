@@ -114,6 +114,7 @@ app.get('/api/test2', async (req, res) => {
   }
 });
 
+
 app.post('/api/test2/add', async (req, res) => {
   const { name, new_column1, new_column2 } = req.body;
   try {
@@ -126,6 +127,27 @@ app.post('/api/test2/add', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+
+
+
+
+
+
+// app.post('/api/test2/add', async (req, res) => {
+//   const { name, new_column1, new_column2 } = req.body;
+//   try {
+//     const client = await pool.connect();
+//     const result = await client.query('INSERT INTO test2 (name, new_column1, new_column2) VALUES ($1, $2, $3) RETURNING id', ["Ansar", "new_column1", "new_column2"]);
+//     res.json({ message: 'Data inserted successfully', insertedId: result.rows[0].id });
+//     client.release();
+//   } catch (error) {
+//     console.error('Error inserting data:', error.message);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 
 
 
