@@ -41,7 +41,7 @@ const AppHeader = () => {
     fontStyle: 'italic',
     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' 
   }}>
-    HOSTEL MANAGEMENT (SYSTEM
+    HOSTEL MANAGEMENT SYSTEM
   </CHeaderBrand>
 </CHeaderNav>
 
