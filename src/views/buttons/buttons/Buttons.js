@@ -119,7 +119,7 @@ const StudentPortfolio = () => {
       </CCol>
 
       {/* Request Modal */}
-      {/* {showRequestModal && (
+      {showRequestModal && (
         <div className={`modal-overlay ${requestOption === 'right' ? 'right' : ''}`}>
           <div className="modal-content">
             <p>
@@ -160,7 +160,7 @@ const StudentPortfolio = () => {
             </div>
           </div>
         </div>
-      )} */}
+      )}
     </CRow>
   );
 };
