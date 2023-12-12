@@ -16,7 +16,7 @@ const Dashboard = () => {
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
-                Traffic
+                Student Record
               </h4>
             </CCol>
           </CRow>
