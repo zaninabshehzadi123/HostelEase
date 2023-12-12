@@ -187,7 +187,7 @@ const StudentPortfolio = () => {
         </CModal>
       )}
 
-      {/* Status Modal
+      Status Modal
       {selectedComplaint && (
         <CModal
           scrollable
@@ -209,7 +209,7 @@ const StudentPortfolio = () => {
             </CButton>
           </CModalFooter>
         </CModal>
-      )} */}
+      )}
     </CRow>
   );
 };
