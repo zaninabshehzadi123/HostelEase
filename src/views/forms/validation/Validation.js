@@ -158,7 +158,7 @@ const StudentPortfolio = () => {
       </CCol>
 
       {/* Complaint Modal */}
-      {selectedComplaint && (
+      {/* {selectedComplaint && (
         <CModal
           scrollable
           visible={visible}
@@ -209,7 +209,7 @@ const StudentPortfolio = () => {
             </CButton>
           </CModalFooter>
         </CModal>
-      )}
+      )} */}
     </CRow>
   );
 };
