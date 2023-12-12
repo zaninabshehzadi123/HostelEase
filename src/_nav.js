@@ -70,14 +70,8 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Alerts',
+        name: 'Show Complaints',
         to: '/notifications/alerts',
-      },
-    
-      {
-        component: CNavItem,
-        name: 'Toasts',
-        to: '/notifications/toasts',
       },
     ],
   },
