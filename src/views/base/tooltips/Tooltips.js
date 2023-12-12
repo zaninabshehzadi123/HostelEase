@@ -1,79 +1,172 @@
-import React from 'react'
-import { CButton, CCard, CCardBody, CCardHeader, CLink, CTooltip, CRow, CCol } from '@coreui/react'
-import { DocsExample } from 'src/components'
+/* eslint-disable prettier/prettier */
 
-const Tooltips = () => {
-  return (
-    <CRow>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>React Tooltip</strong> <small>Basic example</small>
-          </CCardHeader>
-          <CCardBody>
-            <p className="text-medium-emphasis small">
-              Hover over the links below to see tooltips:
-            </p>
-            <DocsExample href="components/tooltip">
-              <p className="text-medium-emphasis">
-                Tight pants next level keffiyeh
-                <CTooltip content="Tooltip text">
-                  <CLink> you probably </CLink>
-                </CTooltip>
-                haven&#39;theard of them. Photo booth beard raw denim letterpress vegan messenger
-                bag stumptown. Farm-to-table seitan, mcsweeney&#39;s fixie sustainable quinoa 8-bit
-                american apparel
-                <CTooltip content="Tooltip text">
-                  <CLink> have a </CLink>
-                </CTooltip>
-                terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo
-                thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney&#39;&#39;s
-                cleanse vegan chambray. A really ironic artisan
-                <CTooltip content="Tooltip text">
-                  <CLink> whatever keytar </CLink>
-                </CTooltip>
-                scenester farm-to-table banksy Austin
-                <CTooltip content="Tooltip text">
-                  <CLink> twitter handle </CLink>
-                </CTooltip>
-                freegan cred raw denim single-origin coffee viral.
-              </p>
-            </DocsExample>
-            <p className="text-medium-emphasis small">
-              Hover over the buttons below to see the four tooltips directions: top, right, bottom,
-              and left. Directions are mirrored when using CoreUI in RTL.
-            </p>
-            <DocsExample href="components/tooltip">
-              <CTooltip
-                content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."
-                placement="top"
-              >
-                <CButton color="secondary">Tooltip on top</CButton>
-              </CTooltip>
-              <CTooltip
-                content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."
-                placement="right"
-              >
-                <CButton color="secondary">Tooltip on right</CButton>
-              </CTooltip>
-              <CTooltip
-                content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."
-                placement="bottom"
-              >
-                <CButton color="secondary">Tooltip on bottom</CButton>
-              </CTooltip>
-              <CTooltip
-                content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."
-                placement="left"
-              >
-                <CButton color="secondary">Tooltip on left</CButton>
-              </CTooltip>
-            </DocsExample>
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
-  )
+import './StudentForm.css';
+import React, { Component } from "react";    
+    
+class StudentForm extends Component {    
+    constructor(props) {    
+        super(props);    
+        this.state = {    
+            rollNo: '',
+            studName: '',    
+            cgpa: '',    
+            phoneNumber: '',    
+            city: 'select',    
+            formErrors: {}    
+        };    
+    
+        this.initialState = this.state;    
+    }    
+    
+    handleFormValidation() {    
+        const { rollNo, studName, cgpa, phoneNumber, city } = this.state;    
+        let formErrors = {};    
+        let formIsValid = true;    
+    
+        // Roll No
+        if (!rollNo) {
+            formIsValid = false;
+            formErrors["rollNoErr"] = "Roll No is required.";
+        }
+
+        // Student name     
+        if (!studName) {    
+            formIsValid = false;    
+            formErrors["studNameErr"] = "Name is required.";    
+        }    
+
+        // CGPA    
+        if (!cgpa) {    
+            formIsValid = false;    
+            formErrors["cgpaErr"] = "CGPA is required.";    
+        }
+
+        
+    // Phone number    
+if (!phoneNumber) {    
+    formIsValid = false;    
+    formErrors["phoneNumberErr"] = "Phone number is required.";    
+}    
+else {    
+    // Updated phone number pattern
+    var mobPattern = /^(03[0-9]{2})-[0-9]{7}$/;    
+    if (!mobPattern.test(phoneNumber)) {    
+        formIsValid = false;    
+        formErrors["phoneNumberErr"] = "Invalid phone number. Please use the format 0302-1234567.";    
+    }    
 }
 
-export default Tooltips
+        // City    
+        if (city === '' || city === "select") {    
+            formIsValid = false;    
+            formErrors["cityErr"] = "Select city.";    
+        }    
+    
+        this.setState({ formErrors: formErrors });    
+        return formIsValid;    
+    }    
+    
+    handleChange = (e) => {    
+        const { name, value } = e.target;    
+        this.setState({ [name]: value });    
+    }    
+    
+    handleSubmit = (e) => {    
+        e.preventDefault();    
+    
+        if (this.handleFormValidation()) {    
+            alert('You have been successfully registered.')    
+            this.setState(this.initialState)    
+        }    
+    }    
+    
+    render() {    
+        const { rollNoErr, studNameErr, cgpaErr, phoneNumberErr, cityErr } = this.state.formErrors;    
+    
+        return (    
+            <div className="formDiv">    
+                <h3 style={{ textAlign: "center" }}>Student Admission Form</h3>    
+                <div>    
+                    <form onSubmit={this.handleSubmit}>    
+                        <div>    
+                            <label htmlFor="rollNo">Roll Number:</label>    
+                            <input
+                                type="text"
+                                name="rollNo"
+                                value={this.state.rollNo}
+                                onChange={this.handleChange}
+                                placeholder="Enter Roll Number."
+                                className={rollNoErr ? 'showError' : ''}
+                            />
+                            {rollNoErr &&
+                                <div style={{ color: "red", paddingBottom: 10 }}>{rollNoErr}</div>
+                            }    
+                        </div>
+                        <div>    
+                            <label htmlFor="studName">Student Name:</label>    
+                            <input
+                                type="text"
+                                name="studName"
+                                value={this.state.studName}
+                                onChange={this.handleChange}
+                                placeholder="Enter Student Name.."
+                                className={studNameErr ? 'showError' : ''}
+                            />    
+                            {studNameErr &&    
+                                <div style={{ color: "red", paddingBottom: 10 }}>{studNameErr}</div>    
+                            }    
+                        </div>
+                        <div>    
+                            <label htmlFor="cgpa">CGPA:</label>    
+                            <input
+                                type="text"
+                                name="cgpa"
+                                value={this.state.cgpa}
+                                onChange={this.handleChange}
+                                placeholder="Enter CGPA.."
+                                className={cgpaErr ? 'showError' : ''}
+                            />    
+                            {cgpaErr &&    
+                                <div style={{ color: "red", paddingBottom: 10 }}>{cgpaErr}</div>    
+                            }    
+                        </div>
+                        <div>    
+                            <label htmlFor="phoneNumber">Phone Number:</label>    
+                            <input
+                                type="text"
+                                name="phoneNumber"
+                                onChange={this.handleChange}
+                                value={this.state.phoneNumber}
+                                placeholder="Enter Phone Number.."
+                                className={phoneNumberErr ? 'showError' : ''}
+                            />    
+                            {phoneNumberErr &&    
+                                <div style={{ color: "red", paddingBottom: 10 }}>{phoneNumberErr}</div>    
+                            }    
+                        </div>
+                        <div>    
+                            <label htmlFor="city">City:</label>    
+                            <select
+                                name="city"
+                                value={this.state.city}
+                                onChange={this.handleChange}
+                                className={cityErr ? 'showError' : ''}
+                            >
+                                <option value="select">--Select--</option>    
+                                <option value="Faisalabad">Faisalabad</option>    
+                                <option value="Karachi">Karachi</option>    
+                                <option value="Islamabad">Islamabad</option>    
+                            </select>    
+                            {cityErr &&    
+                                <div style={{ color: "red", paddingBottom: 10 }}>{cityErr}</div>    
+                            }    
+                        </div>
+                        <input type="submit" value="Sudmit" />    
+                    </form>    
+                </div>    
+            </div>    
+        )    
+    }    
+}    
+    
+export default StudentForm;

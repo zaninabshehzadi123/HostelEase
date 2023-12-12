@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import { cilCursor, cilDrop, cilNotes, cilSpeedometer, cilStar } from '@coreui/icons'
@@ -26,12 +27,12 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Tables',
+        name: 'Show Student',
         to: '/base/tables',
       },
       {
         component: CNavItem,
-        name: 'Tooltips',
+        name: 'Add Student',
         to: '/base/tooltips',
       },
     ],
@@ -44,19 +45,10 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Buttons',
+        name: 'Show Status',
         to: '/buttons/buttons',
       },
-      {
-        component: CNavItem,
-        name: 'Buttons groups',
-        to: '/buttons/button-groups',
-      },
-      {
-        component: CNavItem,
-        name: 'Dropdowns',
-        to: '/buttons/dropdowns',
-      },
+      
     ],
   },
   {
@@ -66,42 +58,7 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Form Control',
-        to: '/forms/form-control',
-      },
-      {
-        component: CNavItem,
-        name: 'Select',
-        to: '/forms/select',
-      },
-      {
-        component: CNavItem,
-        name: 'Checks & Radios',
-        to: '/forms/checks-radios',
-      },
-      {
-        component: CNavItem,
-        name: 'Range',
-        to: '/forms/range',
-      },
-      {
-        component: CNavItem,
-        name: 'Input Group',
-        to: '/forms/input-group',
-      },
-      {
-        component: CNavItem,
-        name: 'Floating Labels',
-        to: '/forms/floating-labels',
-      },
-      {
-        component: CNavItem,
-        name: 'Layout',
-        to: '/forms/layout',
-      },
-      {
-        component: CNavItem,
-        name: 'Validation',
+        name: 'Show Status',
         to: '/forms/validation',
       },
     ],
@@ -116,16 +73,7 @@ const _nav = [
         name: 'Alerts',
         to: '/notifications/alerts',
       },
-      {
-        component: CNavItem,
-        name: 'Badges',
-        to: '/notifications/badges',
-      },
-      {
-        component: CNavItem,
-        name: 'Modal',
-        to: '/notifications/modals',
-      },
+    
       {
         component: CNavItem,
         name: 'Toasts',
