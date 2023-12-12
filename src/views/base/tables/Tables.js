@@ -273,7 +273,7 @@ const StudentPortfolio = () => {
     
     style={{
       background: 'linear-gradient(45deg, #808080, #001f3f)', // Gradient of grey and dark blue
-      color: 'white', // Custom text color
+      color: 'blue', // Custom text color
       border: '1px solid darkred', // Custom border
       borderRadius: '5px', // Custom border radius
       fontSize: '18px', // Custom font size
