@@ -22,7 +22,6 @@ function App() {
         <Stack.Screen name="MainPage" component={MainPage} />
         <Stack.Screen name="DoctorAvailability" component={DoctorAvailability} />
         <Stack.Screen name="ConsultationPage" component={ConsultationPage} />
-
         <Stack.Screen name="RoomAllocation" component={RoomAllocation} />
         <Stack.Screen name="RoomAllocationScreen2" component={RoomAllocationScreen2} />
         <Stack.Screen name="RoomAllocationStatus" component={RoomAllocationStatus} />

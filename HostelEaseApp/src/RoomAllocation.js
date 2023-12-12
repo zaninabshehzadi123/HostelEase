@@ -1,38 +1,37 @@
 // import React, { useState, useEffect } from 'react';
 // import { View, Text, StyleSheet } from 'react-native';
-// import DropDownPicker from 'react-native-dropdown-picker';
+// import { Picker } from '@react-native-picker/picker';
 // import Btn from './Btn';
 // import { useNavigation } from '@react-navigation/native';
 // import axios from 'axios';
 
 // const RoomAllocation = () => {
 //   const [selectedCategory, setSelectedCategory] = useState(null);
+//   const [selectedCategoryLabel, setSelectedCategoryLabel] = useState(null);
 //   const [selectedRoomCategory, setSelectedRoomCategory] = useState(null);
+//   const [selectedRoomCategoryLabel, setSelectedRoomCategoryLabel] = useState(null);
 //   const [data, setData] = useState([]);
+//   const [isOpenCategory, setIsOpenCategory] = useState(false);
+//   const [isOpenRoomCategory, setIsOpenRoomCategory] = useState(false);
 //   const navigation = useNavigation();
 
 //   const categories = [
-//     { label: 'Item 1', value: 'item1' },
-//     { label: 'Item 2', value: 'item2' },
-//     { label: 'Item 3', value: 'item3' },
+//     { label: 'Senior', value: 'senior' },
+//     { label: 'Junior', value: 'junior' },
 //   ];
 
 //   const roomCategories = [
-//     { label: 'Room 1', value: 'room1' },
-//     { label: 'Room 2', value: 'room2' },
-//     { label: 'Room 3', value: 'room3' },
+//     { label: 'Single Seater', value: 'single' },
+//     { label: 'Double Seater', value: 'double' },
+//     { label: 'Shared Room', value: 'shared' },
 //   ];
 
 //   useEffect(() => {
-//     const machineIp = '192.168.43.185';
-//     // Fetch data from the server
 //     const fetchData = async () => {
 //       try {
-//         console.log('try');
-//         const response = await axios.get('http://192.168.43.185:8081/api/test2');
-//         console.log('try2');
-//         setData(response.data);
+//         const response = await axios.get('http://192.168.43.185:8081/api/JinnahRooms');
 //         console.log('Data fetched from the server:', response.data);
+//         setData(response.data);
 //       } catch (error) {
 //         console.error('Error fetching data:', error.message);
 //       }
@@ -40,51 +39,81 @@
 //     fetchData();
 //   }, []);
 
+//   useEffect(() => {
+//     showLogs(`Selected category: ${selectedCategoryLabel}`);
+//   }, [selectedCategoryLabel]);
+
+//   useEffect(() => {
+//     showLogs(`Selected room category: ${selectedRoomCategoryLabel}`);
+//   }, [selectedRoomCategoryLabel]);
+
+//   const handleCategoryChange = (categoryItemValue) => {
+//     setSelectedCategory(categoryItemValue);
+//     setSelectedCategoryLabel(categories.find(category => category.value === categoryItemValue)?.label);
+//     setIsOpenCategory(false);
+//   };
+
+//   const handleRoomCategoryChange = (roomItemValue) => {
+//     setSelectedRoomCategory(roomItemValue);
+//     setSelectedRoomCategoryLabel(roomCategories.find(roomCategory => roomCategory.value === roomItemValue)?.label);
+//     setIsOpenRoomCategory(false);
+//   };
+
+//   const showLogs = (message) => {
+//     console.log(message);
+//   };
+
+//   const navigateToOtherScreen = () => {
+//     navigation.navigate('RoomAllocationScreen2', {
+//       selectedCategory,
+//       selectedRoomCategory,
+//     });
+//   };
+
 //   return (
 //     <View style={styles.container}>
 //       <Text style={styles.heading}>Room Allotment</Text>
 
 //       <Text style={styles.subHeading}>Select Category</Text>
-//       <DropDownPicker
-//         items={categories}
-//         defaultValue={selectedCategory}
-//         containerStyle={{ height: 40 }}
-//         style={{ backgroundColor: '#fafafa' }}
-//         itemStyle={{ justifyContent: 'flex-start' }}
-//         dropDownStyle={{ backgroundColor: '#fafafa' }}
-//         onChangeItem={(item) => setSelectedCategory(item.value)}
-//         placeholder="Select a category"
-//       />
+//       <Picker
+//         onValueChange={(categoryItemValue) => handleCategoryChange(categoryItemValue)}
+//         selectedValue={selectedCategory}
+//         style={styles.picker}
+//       >
+//         {categories.map((category, index) => (
+//           <Picker.Item key={index} label={category.label} value={category.value} />
+//         ))}
+//       </Picker>
 
 //       <Text style={styles.subHeading}>Select Room Category</Text>
-//       <DropDownPicker
-//         items={roomCategories}
-//         defaultValue={selectedRoomCategory}
-//         containerStyle={{ height: 40 }}
-//         style={{ backgroundColor: '#fafafa' }}
-//         itemStyle={{ justifyContent: 'flex-start' }}
-//         dropDownStyle={{ backgroundColor: '#fafafa' }}
-//         onChangeItem={(item) => setSelectedRoomCategory(item.value)}
-//         placeholder="Select a room category"
-//       />
+//       <Picker
+//         selectedValue={selectedRoomCategory}
+//         style={styles.picker}
+//         onValueChange={(roomItemValue) => handleRoomCategoryChange(roomItemValue)}
+//       >
+//         {roomCategories.map((roomCategory, roomIndex) => (
+//           <Picker.Item key={roomIndex} label={roomCategory.label} value={roomCategory.value} />
+//         ))}
+//       </Picker>
 
-//       <View style={{ marginTop: 20 }}>
+//       <View style={styles.btnContainer}>
 //         <Btn 
 //           bgColor="darkgreen"
 //           textColor="white"
 //           btnLabel="Proceed to Booking"
-//           Press={() => {
-//             navigation.navigate('RoomAllocationScreen2');
-//             // Handle confirmation logic here
-//             // You may want to navigate to another screen or perform further actions
-//           }}
+//           Press={navigateToOtherScreen}
 //         />
 //       </View>
 
-//       <View>
+//       <View style={styles.dataSection}>
 //         <Text>Data from PostgreSQL:</Text>
 //         {data.map(item => (
-//           <Text key={item.id}>{item.name}</Text>
+//           <Text key={item.id} style={styles.dataItem}>
+//             {item.id}
+//             {item.hall}
+//             {item.floor}
+//             {item.roomtype}
+//           </Text>
 //         ))}
 //       </View>
 //     </View>
@@ -95,58 +124,60 @@
 //   container: {
 //     flex: 1,
 //     justifyContent: 'flex-start',
-//     paddingHorizontal: 16,
+//     padding: 20,
+//     borderRadius: 10,
+//     backgroundColor: '#f5f5f5',
 //   },
 //   heading: {
 //     fontSize: 24,
 //     fontWeight: 'bold',
-//     marginTop: 50,
+//     color: '#333',
 //     textAlign: 'center',
 //     marginBottom: 10,
-//     color: 'red',
 //   },
 //   subHeading: {
-//     fontSize: 24,
-//     marginTop: 10,
-//     fontWeight: 'bold',
+//     fontSize: 18,
+//     color: '#333',
 //     textAlign: 'center',
 //     marginBottom: 10,
+//   },
+//   btnContainer: {
+//     marginTop: 20,
+//   },
+//   dataSection: {
+//     borderWidth: 1,
+//     borderColor: '#ddd',
+//     padding: 10,
+//     marginTop: 20,
+//   },
+//   dataItem: {
+//     fontSize: 14,
+//   },
+//   picker: {
+//     height: 40,
+//     backgroundColor: '#fafafa',
+//     borderWidth: 1,
+//     borderColor: '#ddd',
+//     shadowRadius: 2,
+//     shadowOpacity: 0.2,
 //   },
 // });
 
 // export default RoomAllocation;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { Picker } from '@react-native-picker/picker';
 import Btn from './Btn';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 const RoomAllocation = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedCategoryLabel, setSelectedCategoryLabel] = useState(null); // Added missing state
+  const [selectedCategoryLabel, setSelectedCategoryLabel] = useState(null);
   const [selectedRoomCategory, setSelectedRoomCategory] = useState(null);
-  const [selectedRoomCategoryLabel, setSelectedRoomCategoryLabel] = useState(null); // Added missing state
+  const [selectedRoomCategoryLabel, setSelectedRoomCategoryLabel] = useState(null);
   const [data, setData] = useState([]);
   const [isOpenCategory, setIsOpenCategory] = useState(false);
   const [isOpenRoomCategory, setIsOpenRoomCategory] = useState(false);
@@ -166,7 +197,7 @@ const RoomAllocation = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.43.185:8081/api/test2');
+        const response = await axios.get('http://192.168.43.185:8081/api/JinnahRooms');
         console.log('Data fetched from the server:', response.data);
         setData(response.data);
       } catch (error) {
@@ -176,24 +207,36 @@ const RoomAllocation = () => {
     fetchData();
   }, []);
 
-  const handleCategoryChange = (item) => {
-    setSelectedCategory(item.value);
-    setSelectedCategoryLabel(item.label); // Set the label for the selected category
+  useEffect(() => {
+    showLogs(`Selected category: ${selectedCategoryLabel}`);
+  }, [selectedCategoryLabel]);
+
+  useEffect(() => {
+    showLogs(`Selected room category: ${selectedRoomCategoryLabel}`);
+  }, [selectedRoomCategoryLabel]);
+
+  const handleCategoryChange = (categoryItemValue) => {
+    setSelectedCategory(categoryItemValue);
+    setSelectedCategoryLabel(categories.find(category => category.value === categoryItemValue)?.label);
     setIsOpenCategory(false);
-    showLogs(`Selected category: ${item.label}`);
-    console.log(item.label);
   };
 
-  const handleRoomCategoryChange = (item) => {
-    setSelectedRoomCategory(item.value);
-    setSelectedRoomCategoryLabel(item.label); // Set the label for the selected room category
+  const handleRoomCategoryChange = (roomItemValue) => {
+    setSelectedRoomCategory(roomItemValue);
+    setSelectedRoomCategoryLabel(roomCategories.find(roomCategory => roomCategory.value === roomItemValue)?.label);
     setIsOpenRoomCategory(false);
-    showLogs(`Selected room category: ${item.label}`);
   };
 
   const showLogs = (message) => {
     console.log(message);
-    // You can customize this function to display logs as needed
+  };
+ 
+
+  const navigateToOtherScreen = () => {
+    navigation.navigate('RoomAllocationScreen2', {
+      selectedCategory,
+      selectedRoomCategory,
+    });
   };
 
   return (
@@ -201,47 +244,33 @@ const RoomAllocation = () => {
       <Text style={styles.heading}>Room Allotment</Text>
 
       <Text style={styles.subHeading}>Select Category</Text>
-      <DropDownPicker
-  items={categories}
-  defaultValue={selectedCategory} // Use state variable for initial display
-  containerStyle={[styles.dropDownPicker, { zIndex: isOpenCategory ? 1 : 0 }]}
-  style={[styles.dropDownPicker, { zIndex: isOpenCategory ? 1 : 0 }]}
-  itemStyle={styles.itemStyle}
-  dropDownStyle={[styles.dropDownPicker, { zIndex: isOpenCategory ? 1 : 0 }]}
-  open={isOpenCategory}
-  onOpen={() => setIsOpenCategory(true)}
-  onClose={() => setIsOpenCategory(false)}
-  onChangeItem={(item) => handleCategoryChange(item)}
-  placeholder="Select a category"
-  placeholderStyle={styles.placeholderStyle}
-/>
+      <Picker
+        onValueChange={(categoryItemValue) => handleCategoryChange(categoryItemValue)}
+        selectedValue={selectedCategory}
+        style={styles.picker}
+      >
+        {categories.map((category, index) => (
+          <Picker.Item key={index} label={category.label} value={category.value} />
+        ))}
+      </Picker>
 
-<Text style={styles.subHeading}>Select Room Category</Text>
-<DropDownPicker
-  items={roomCategories}
-  defaultValue={selectedRoomCategory} // Use state variable for initial display
-  containerStyle={[styles.dropDownPicker, { zIndex: isOpenRoomCategory ? 1 : 0 }]}
-  style={[styles.dropDownPicker, { zIndex: isOpenRoomCategory ? 1 : 0 }]}
-  itemStyle={styles.itemStyle}
-  dropDownStyle={[styles.dropDownPicker, { zIndex: isOpenRoomCategory ? 1 : 0 }]}
-  open={isOpenRoomCategory}
-  onOpen={() => setIsOpenRoomCategory(true)}
-  onClose={() => setIsOpenRoomCategory(false)}
-  onChangeItem={(item) => handleRoomCategoryChange(item)}
-
-  placeholder="Select a room category"
-  placeholderStyle={styles.placeholderStyle}
-/>
-
+      <Text style={styles.subHeading}>Select Room Category</Text>
+      <Picker
+        selectedValue={selectedRoomCategory}
+        style={styles.picker}
+        onValueChange={(roomItemValue) => handleRoomCategoryChange(roomItemValue)}
+      >
+        {roomCategories.map((roomCategory, roomIndex) => (
+          <Picker.Item key={roomIndex} label={roomCategory.label} value={roomCategory.value} />
+        ))}
+      </Picker>
 
       <View style={styles.btnContainer}>
         <Btn 
           bgColor="darkgreen"
           textColor="white"
           btnLabel="Proceed to Booking"
-          Press={() => {
-            navigation.navigate('RoomAllocationScreen2');
-          }}
+          Press={navigateToOtherScreen}
         />
       </View>
 
@@ -250,8 +279,9 @@ const RoomAllocation = () => {
         {data.map(item => (
           <Text key={item.id} style={styles.dataItem}>
             {item.id}
-            {item.name}
-            {item.new_column1}
+            {item.hall}
+            {item.floor}
+            {item.roomtype}
           </Text>
         ))}
       </View>
@@ -273,26 +303,15 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
     marginBottom: 10,
+    marginTop : 20,
   },
   subHeading: {
     fontSize: 18,
+    fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
     marginBottom: 10,
-  },
-  dropDownPicker: {
-    height: 40,
-    backgroundColor: '#fafafa',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    shadowRadius: 2,
-    shadowOpacity: 0.2,
-  },
-  placeholderStyle: {
-    color: '#999',
-  },
-  itemStyle: {
-    fontSize: 16,
+    marginTop : 20,
   },
   btnContainer: {
     marginTop: 20,
@@ -305,6 +324,14 @@ const styles = StyleSheet.create({
   },
   dataItem: {
     fontSize: 14,
+  },
+  picker: {
+    height: 40,
+    backgroundColor: '#fafafa',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    shadowRadius: 2,
+    shadowOpacity: 0.2,
   },
 });
 
