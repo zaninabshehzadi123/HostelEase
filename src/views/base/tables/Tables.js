@@ -296,7 +296,7 @@ const StudentPortfolio = () => {
                   {Array.from({ length: totalPageCount }, (_, i) => (
                     <li
                       key={i}
-                      className={`page-item ${currentPage === i + 2 ? 'active' : ''}`}
+                      className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}
                       onClick={() => handlePageChange(i + 1)}
                     >
                       <span className="page-link">{i + 1}</span>
