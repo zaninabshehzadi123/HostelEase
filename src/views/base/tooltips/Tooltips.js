@@ -19,7 +19,7 @@ class StudentForm extends Component {
     }    
     
     handleFormValidation() {    
-        const { rollNo, studName, cgpa, phoneNumber, city } = this.state;    
+        const { rollNo, studName, cgpa,  phoneNumber, city } = this.state;    
         let formErrors = {};    
         let formIsValid = true;    
     
@@ -57,10 +57,10 @@ else {
 }
 
         // City    
-        // if (city === '' || city === "select") {    
-        //     formIsValid = false;    
-        //     formErrors["cityErr"] = "Select city.";    
-        // }    
+        if (city === '' || city === "select") {    
+            formIsValid = false;    
+            formErrors["cityErr"] = "Select city.";    
+        }    
     
         this.setState({ formErrors: formErrors });    
         return formIsValid;    
