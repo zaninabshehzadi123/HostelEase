@@ -22,24 +22,7 @@ import {
 } from '@coreui/react';
 
 const PAGE_LIMIT = 5; // Number of records per page
-const initialData = [
-  { id: 1, name: 'Mark', rollNo: 'A123', phoneNumber: '123-456-7890', cgpa: '3.8' },
-  { id: 2, name: 'Jacob', rollNo: 'B456', phoneNumber: '987-654-3210', cgpa: '3.5' },
-  { id: 3, name: 'Larry', rollNo: 'C789', phoneNumber: '555-123-4567', cgpa: '4.0' },
-  { id: 4, name: 'Alice', rollNo: 'D123', phoneNumber: '111-222-3333', cgpa: '3.9' },
-  { id: 5, name: 'Bob', rollNo: 'E456', phoneNumber: '444-555-6666', cgpa: '3.7' },
-  { id: 6, name: 'Charlie', rollNo: 'F789', phoneNumber: '777-888-9999', cgpa: '3.6' },
-  { id: 7, name: 'David', rollNo: 'G123', phoneNumber: '000-999-8888', cgpa: '3.8' },
-  { id: 8, name: 'Eve', rollNo: 'H456', phoneNumber: '123-987-4567', cgpa: '3.7' },
-   { id: 9, name: 'Mark', rollNo: 'A123', phoneNumber: '123-456-7890', cgpa: '3.8' },
-  { id: 10, name: 'Jacob', rollNo: 'B456', phoneNumber: '987-654-3210', cgpa: '3.5' },
-  { id: 11, name: 'Larry', rollNo: 'C789', phoneNumber: '555-123-4567', cgpa: '4.0' },
-  { id: 12, name: 'Alice', rollNo: 'D123', phoneNumber: '111-222-3333', cgpa: '3.9' },
-  { id: 13, name: 'Bob', rollNo: 'E456', phoneNumber: '444-555-6666', cgpa: '3.7' },
-  { id: 14, name: 'Charlie', rollNo: 'F789', phoneNumber: '777-888-9999', cgpa: '3.6' },
-  { id: 15, name: 'David', rollNo: 'G123', phoneNumber: '000-999-8888', cgpa: '3.8' },
-  { id: 16, name: 'Eve', rollNo: 'H456', phoneNumber: '123-987-4567', cgpa: '3.7' },
-];
+
 const StudentPortfolio = () => {
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -186,7 +169,7 @@ useEffect(() => {
                     <CTableDataCell>{student.cgpa}</CTableDataCell>
                     <CTableDataCell>
                       <CButton color="primary" size="sm" onClick={() => handlebuttonClick(student.id)}>
-                        Update record
+                        Update 
                       </CButton>
                     </CTableDataCell>
                      <CTableDataCell>
