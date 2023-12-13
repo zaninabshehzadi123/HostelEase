@@ -186,7 +186,7 @@ useEffect(() => {
                     <CTableDataCell>{student.cgpa}</CTableDataCell>
                     <CTableDataCell>
                       <CButton color="primary" size="sm" onClick={() => handlebuttonClick(student.id)}>
-                        Update 
+                        Update record
                       </CButton>
                     </CTableDataCell>
                      <CTableDataCell>
