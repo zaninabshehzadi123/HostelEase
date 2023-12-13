@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 /* eslint-disable prettier/prettier */
 import React from 'react'
 import { NavLink } from 'react-router-dom'
@@ -17,6 +18,8 @@ import {  cilMenu } from '@coreui/icons'
 import { AppBreadcrumb } from './index'
 import { logo } from 'src/assets/brand/logo'
 
+import logoo from "../assets/images/logo.png"
+
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -28,10 +31,11 @@ const AppHeader = () => {
           className="ps-1"
           onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
         >
-          <CIcon icon={cilMenu} size="lg" />
+          {/* <CIcon icon={logo} size="lg" /> */}
+          <img src={logoo} alt="Custom Logo" height={100} />
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none" to="/">
-          <CIcon icon={logo} height={48} alt="Logo" />
+          <CIcon icon={logoo} height={48} alt="Logo" />
         </CHeaderBrand>
         <CHeader>
         <CHeaderNav className="d-flex justify-content-center align-items-center">
@@ -41,7 +45,7 @@ const AppHeader = () => {
     fontStyle: 'italic',
     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' 
   }}>
-    HOSTEL MANAGEMENT SYSTEM
+    HOSTELEASE MANAGEMENT SYSTEM
   </CHeaderBrand>
 </CHeaderNav>
 
@@ -57,7 +61,16 @@ const AppHeader = () => {
       </CContainer>
       <CHeaderDivider />
       <CContainer fluid>
-        <AppBreadcrumb />
+       <CHeaderBrand style={{ 
+    color: 'your_desired_color', 
+    fontWeight: 'bold', 
+    fontStyle: 'normal',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' 
+  }}>
+    Welcome Admin Dashboard
+  </CHeaderBrand>
+       {/* <AppBreadcrumb /> */}
+        
       </CContainer>
     </CHeader>
   )

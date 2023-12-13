@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-class-members */
 /* eslint-disable prettier/prettier */
 
 import './StudentForm.css';
@@ -79,7 +80,39 @@ else {
             this.setState(this.initialState)    
         }    
     }    
-    
+    handleSubmit = (e) => {
+  e.preventDefault();
+
+  if (this.handleFormValidation()) {
+    // Prepare the data for the POST request
+    const { rollNo, studName, cgpa, phoneNumber, city } = this.state;
+    const formData = { rollNo, studName, cgpa, phoneNumber, city };
+
+    // Make a POST request to the backend API
+    fetch('http://localhost:4000/api/students',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Student added successfully:', data);
+        alert('Student added successfully.');
+        this.setState(this.initialState);
+      })
+      .catch(error => {
+        console.error('Error adding student:', error);
+        alert('Failed to add student. Please try again.');
+      });
+  }
+}
     render() {    
         const { rollNoErr, studNameErr, cgpaErr, phoneNumberErr, cityErr } = this.state.formErrors;    
     

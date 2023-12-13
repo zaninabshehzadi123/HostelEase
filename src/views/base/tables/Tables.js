@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   CCard,
   CCardBody,
@@ -41,7 +41,7 @@ const initialData = [
   { id: 16, name: 'Eve', rollNo: 'H456', phoneNumber: '123-987-4567', cgpa: '3.7' },
 ];
 const StudentPortfolio = () => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [updatedName, setUpdatedName] = useState('');
@@ -55,7 +55,26 @@ const StudentPortfolio = () => {
   const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
 
   const totalPageCount = Math.ceil(data.length / PAGE_LIMIT);
+  
+useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/api/students');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
 
+        const responseData = await response.json();
+        // Assuming the response data is an array of student objects
+        setData(responseData);
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    };
+
+    // Call the fetch function when the component mounts
+    fetchData();
+  }, []); // The empty dependency array ensures this effect runs only once when the component mounts
   const handleUpdate = () => {
     if (selectedRow !== null) {
       // Update the data in the state
@@ -88,15 +107,33 @@ const StudentPortfolio = () => {
     }
   };
 
-  const handleDelete = () => {
-    if (selectedRow !== null) {
-      // Implement your delete functionality here
-      const newData = data.filter((student) => student.id !== selectedRow);
-      setData(newData);
-      setSelectedRow(null); // Reset selected row after deletion
-      //setShowUpdateButton(false); // Hide the button after deletion
+ const handleDelete = (rollNo) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this record?');
+
+    if (confirmDelete) {
+      fetch(`http://localhost:4000/api/students/${rollNo}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to delete record');
+          }
+
+          // Update the data state after successful deletion
+          const newData = data.filter((student) => student.roll_no !== rollNo);
+          setData(newData);
+          setSelectedRow(null); // Reset selected row after deletion
+        })
+        .catch((error) => {
+          console.error('Error deleting record:', error.message);
+        });
     }
   };
+
+
   const handlebuttonClick = (id) =>{
     setModalVisible(true);
      // Fetch the data of the selected row
@@ -132,65 +169,42 @@ const StudentPortfolio = () => {
                   <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
                   <CTableHeaderCell scope="col">CGPA</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Update</CTableHeaderCell>
+                   <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {currentRecords.map((student, index) => (
-              
                   <CTableRow
                     key={student.id}
-                    active={selectedRow === student.id}
+                    className={selectedRow === student.id ? 'selected-row' : ''}
                     onClick={() => handleRowClick(student.id)}
                   >
                     <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
                     <CTableDataCell>{student.name}</CTableDataCell>
-                    <CTableDataCell>{student.rollNo}</CTableDataCell>
-                    <CTableDataCell>{student.phoneNumber}</CTableDataCell>
+                    <CTableDataCell>{student.roll_no}</CTableDataCell>
+                    <CTableDataCell>{student.phone_number}</CTableDataCell>
                     <CTableDataCell>{student.cgpa}</CTableDataCell>
                     <CTableDataCell>
                       <CButton color="primary" size="sm" onClick={() => handlebuttonClick(student.id)}>
-                        Update Record
+                        Update 
                       </CButton>
                     </CTableDataCell>
+                     <CTableDataCell>
+  <CButton
+  color="info"  // Set the color to "info" for light blue
+  size="sm"
+  onClick={() => handleDelete(student.roll_no)}
+>
+  Delete
+</CButton>
+
+</CTableDataCell>
                   </CTableRow>
                 ))}
               </CTableBody>
             </CTable>
             <div className="d-flex justify-content-between mb-3">
-  <CButton
-    className="custom-delete-button"
-    style={{
-      background: 'linear-gradient(45deg, #808080, #001f3f)',
-      color: 'white',
-      border: '1px solid darkred',
-      borderRadius: '5px',
-      fontSize: '18px',
-      padding: '10px 20px',
-    }}
-    size="sm"
-    onClick={handleDelete}
-  >
-    Delete Record
-  </CButton>
-
-  <CButton
-    className="custom-delete-button"
-    style={{
-      background: 'linear-gradient(45deg, #808080, #001f3f)',
-      color: 'white',
-      border: '1px solid darkred',
-      borderRadius: '5px',
-      fontSize: '18px',
-      padding: '10px 20px',
-    }}
-    size="sm"
-    onClick={() => {
-    // Navigate to the specified path
-    window.location.href = '/tooltips';
-  }}
->
-    Add Record
-  </CButton>
+  
 </div>
 
 
