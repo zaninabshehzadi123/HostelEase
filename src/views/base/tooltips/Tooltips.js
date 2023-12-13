@@ -60,7 +60,7 @@ else {
         // City    
         if (city === '' || city === "select") {    
             formIsValid = false;    
-            formErrors["cityErr"] = "Select city.";    
+            formErrors["cityErr"] = "Select City.";    
         }    
     
         this.setState({ formErrors: formErrors });    

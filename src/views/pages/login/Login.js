@@ -88,7 +88,7 @@ const Login = () => {
               <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Welcome to HostelEase</h2>
+                    <h2>Welcome to Hostel System</h2>
                     <p>"Transforming student accommodations with our advanced Hostel Management System."</p>
                   </div>
                 </CCardBody>
