@@ -109,7 +109,7 @@ else {
       })
       .catch(error => {
         console.error('Error adding student:', error);
-        alert('Failed to add student. Please try again.');
+        alert('Failed to add student in database. Please try again.');
       });
   }
 }
