@@ -52,17 +52,7 @@ const ConsultationPage = () => {
           <Text style={{ color: 'white' }}>Send Symptoms</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Doctor's Response..."
-          value={doctorResponse}
-          onChangeText={(text) => setDoctorResponse(text)}
-        />
-        <TouchableOpacity style={styles.sendButton} onPress={handleConsult}>
-          <Text style={{ color: 'white' }}>Consult</Text>
-        </TouchableOpacity>
-      </View>
+     
     </View>
   );
 };
