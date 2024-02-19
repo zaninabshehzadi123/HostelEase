@@ -20,16 +20,7 @@ const ComplaintBox = ({ onComplaintSubmit, onGatePassRequest }) => {
     }
   };
 
-  const handleGatePassRequest = () => {
-    if (gatePassReason.trim() === '') {
-      Alert.alert('Error', 'Please enter the reason for the gate pass request.');
-    } else {
-      const newGatePassRequest = { reason: gatePassReason, status: 'Pending', sender: 'Student' };
-      onGatePassRequest(newGatePassRequest); // Pass the gate pass request to the parent component
-      setGatePassReason('');
-      Alert.alert('Success', 'Gate pass request submitted successfully!');
-    }
-  };
+
 
   return (
     <Background>

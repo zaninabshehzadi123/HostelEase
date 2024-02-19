@@ -30,6 +30,9 @@ import HostelRegistration from './src/HostelRegistration';
 import DoctorScreen from './src/DoctorScreen';
 import { MessageProvider } from './src/MessageContext';
 import HostelWarden from './src/HostelWarden';
+import MessRegistration from './src/MessRegistration';
+import DayMenu from './src/DayMenu';
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -170,6 +173,9 @@ function App() {
           <Stack.Screen name="HostelRegistration" component={HostelRegistration} />
           <Stack.Screen name="DoctorScreen" component={DoctorScreen} />
           <Stack.Screen name="HostelWarden" component={HostelWarden} />
+          <Stack.Screen name="MessRegistration" component={MessRegistration} options={{ title: 'Mess Registration' }} />
+          <Stack.Screen name="DayMenu" component={DayMenu} options={{ title: 'Day Menu' }} />
+
         </Stack.Navigator>
       </MessageProvider>
     </NavigationContainer>
