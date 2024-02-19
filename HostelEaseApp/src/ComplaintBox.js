@@ -20,16 +20,7 @@ const ComplaintBox = ({ onComplaintSubmit, onGatePassRequest }) => {
     }
   };
 
-  const handleGatePassRequest = () => {
-    if (gatePassReason.trim() === '') {
-      Alert.alert('Error', 'Please enter the reason for the gate pass request.');
-    } else {
-      const newGatePassRequest = { reason: gatePassReason, status: 'Pending', sender: 'Student' };
-      onGatePassRequest(newGatePassRequest); // Pass the gate pass request to the parent component
-      setGatePassReason('');
-      Alert.alert('Success', 'Gate pass request submitted successfully!');
-    }
-  };
+  
 
   return (
     <Background>
@@ -62,29 +53,7 @@ const ComplaintBox = ({ onComplaintSubmit, onGatePassRequest }) => {
             <Button title="Submit Complaint" onPress={handleComplaintSubmission} />
           </View>
         </View>
-
-        {/* Gate Pass Request Box */}
-        <View
-          style={{
-            backgroundColor: 'white',
-            height: 300,
-            width: 460,
-            borderTopLeftRadius: 130,
-            paddingTop: 50,
-            alignItems: 'center',
-          }}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>Gate Pass Request</Text>
-          <View style={{ padding: 20 }}>
-            <TextInput
-              placeholder="Reason for gate pass request"
-              style={{ borderWidth: 5, borderColor: '#ccc', padding: 10, marginBottom: 20 }}
-              value={gatePassReason}
-              onChangeText={(text) => setGatePassReason(text)}
-            />
-
-            <Button title="Submit Gate Pass Request" onPress={handleGatePassRequest} />
-          </View>
-        </View>
+  
       </View>
     </Background>
   );

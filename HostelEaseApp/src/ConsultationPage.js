@@ -1,82 +1,59 @@
+// ConsultationPage.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import Background from './Background';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
 import { darkGreen } from './Constants';
+import { useMessageContext } from './MessageContext';
 
 const ConsultationPage = () => {
+  const { messages, addMessage } = useMessageContext();
   const [studentSymptoms, setStudentSymptoms] = useState('');
   const [doctorResponse, setDoctorResponse] = useState('');
-  const [messages, setMessages] = useState([]);
 
   const handleSend = () => {
     if (studentSymptoms.trim() === '') return;
-
-    // Add the student's symptoms to the messages array
-    setMessages([...messages, { text: studentSymptoms, sender: 'Student' }]);
-    // Clear the input field
+    const message = { text: studentSymptoms, sender: 'Student' };
+    addMessage(message);
     setStudentSymptoms('');
   };
 
   const handleConsult = () => {
-    // Add the doctor's response to the messages array
-    setMessages([...messages, { text: doctorResponse, sender: 'Doctor' }]);
-    // Clear the input field
+    if (doctorResponse.trim() === '') return;
+    const message = { text: doctorResponse, sender: 'Doctor' };
+    addMessage(message);
     setDoctorResponse('');
   };
 
   return (
-    <Background>
-      <View style={{ alignItems: 'center', width: 360 }}>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 46,
-            fontWeight: 'bold',
-            marginVertical: 20,
-          }}>
-          Online Consulting
-        </Text>
-        <View style={styles.container}>
-          <ScrollView style={styles.chatContainer}>
-            {messages.map((message, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.message,
-                  {
-                    alignSelf: message.sender === 'Student' ? 'flex-start' : 'flex-end',
-                    backgroundColor: message.sender === 'Student' ? '#3498db' : darkGreen,
-                  },
-                ]}>
-                <Text style={{ color: 'white' }}>{`${message.sender}: ${message.text}`}</Text>
-              </View>
-            ))}
-          </ScrollView>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your symptoms..."
-              value={studentSymptoms}
-              onChangeText={(text) => setStudentSymptoms(text)}
-            />
-            <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-              <Text style={{ color: 'white' }}>Send Symptoms</Text>
-            </TouchableOpacity>
+    <View style={styles.container}>
+      <Text style={styles.header}>Online Consulting</Text>
+      <ScrollView style={styles.chatContainer}>
+        {messages.map((message, index) => (
+          <View
+            key={index}
+            style={[
+              styles.message,
+              {
+                alignSelf: message.sender === 'Student' ? 'flex-start' : 'flex-end',
+                backgroundColor: message.sender === 'Student' ? '#3498db' : darkGreen,
+              },
+            ]}>
+            <Text style={{ color: 'white' }}>{`${message.sender}: ${message.text}`}</Text>
           </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Doctor's Response..."
-              value={doctorResponse}
-              onChangeText={(text) => setDoctorResponse(text)}
-            />
-            <TouchableOpacity style={styles.sendButton} onPress={handleConsult}>
-              <Text style={{ color: 'white' }}>Consult</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        ))}
+      </ScrollView>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your symptoms..."
+          value={studentSymptoms}
+          onChangeText={(text) => setStudentSymptoms(text)}
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+          <Text style={{ color: 'white' }}>Send Symptoms</Text>
+        </TouchableOpacity>
       </View>
-    </Background>
+     
+    </View>
   );
 };
 
@@ -85,18 +62,19 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     width: 360,
-    backgroundColor: 'white',
-    height: 600,
+    backgroundColor: '#f8f8f8', // Change background color
+    paddingVertical: 20,
   },
   header: {
-    color: 'white',
-    fontSize: 46,
+    color: darkGreen,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginVertical: 20,
+    marginBottom: 20,
   },
   chatContainer: {
     flex: 1,
     width: '100%',
+    marginBottom: 20,
   },
   message: {
     padding: 10,
@@ -108,13 +86,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderTopWidth: 1,
-    borderColor: 'white',
+    borderColor: darkGreen,
     padding: 10,
+    backgroundColor: 'white', // Change background color
   },
   input: {
     flex: 1,
     height: 40,
-    borderColor: 'gray',
+    borderColor: darkGreen,
     borderWidth: 1,
     borderRadius: 8,
     marginRight: 10,
