@@ -24,7 +24,7 @@
 //   useEffect(() => {
 //     const fetchData = async () => {
 //       try {
-//         const response = await axios.get('http://192.168.137.1:8081/api/JinnahRooms');
+//         const response = await axios.get('http://192.168.43.185:8081/api/JinnahRooms');
 //         console.log('Data fetched from the server:', response.data);
 //         setData(response.data);
 //       } catch (error) {
@@ -61,7 +61,7 @@
 
 //   const checkForWarnings = async () => {
 //     try {
-//       const response = await axios.post('http://192.168.137.1:8081/api/checkWarning', {
+//       const response = await axios.post('http://192.168.43.185:8081/api/checkWarning', {
 //         email,
 //       });
 
@@ -168,7 +168,7 @@ const RoomAllocation = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.137.1:8081/api/JinnahRooms');
+        const response = await axios.get('http://192.168.43.185:8081/api/JinnahRooms');
         console.log('Data fetched from the server:', response.data);
         setData(response.data);
       } catch (error) {
@@ -205,7 +205,7 @@ const RoomAllocation = () => {
 
   const checkForWarnings = async () => {
     try {
-      const response = await axios.post('http://192.168.137.1:8081/api/checkWarning', {
+      const response = await axios.post('http://192.168.43.185:8081/api/checkWarning', {
         email,
       });
 

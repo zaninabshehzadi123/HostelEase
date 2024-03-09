@@ -7,7 +7,7 @@ const port = 8081;
 
 const pool = new Pool({
   user: 'postgres',
-  host: '192.168.137.1',
+  host: '54.211.145.126',
   database: 'HostelEase',
   password: 'postgres',
   port: 5432,
@@ -102,7 +102,7 @@ app.get('/api/singleSeaterRoom', async (req, res) => {
   try {
     const client = await pool.connect();
 
-    const result = await client.query("SELECT * FROM singleseater WHERE member IS NULL");
+    const result = await client.query("SELECT * FROM singleseater WHERE member1 IS NULL");
 
     res.json(result.rows);
     client.release();
@@ -185,6 +185,147 @@ app.post('/api/checkWarning', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.post('/api/applyForBooking', async (req, res) => {
+  const { roomId, selectedRoomCategory } = req.body;
+
+  try {
+    const client = await pool.connect();
+
+    // Find the selected room based on the room ID and category
+    let tableName, updateQuery;
+
+    switch (selectedRoomCategory) {
+      case 'single':
+        tableName = 'singleseater';
+        updateQuery = `UPDATE ${tableName} 
+                      SET 
+                        member1 = CASE WHEN id = $1 AND member1 IS NULL THEN 'Applied' ELSE member1 END
+                      WHERE id = $1`;
+        break;
+
+      case 'double':
+        tableName = 'twoseaterroom';
+        updateQuery = `UPDATE ${tableName} 
+                      SET 
+                        member1 = CASE WHEN id = $1 AND member1 IS NULL THEN 'Applied' ELSE member1 END,
+                        member2 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NULL THEN 'Applied' ELSE member2 END
+                      WHERE id = $1`;
+        break;
+
+      case 'shared':
+        tableName = 'sharedrooms';
+        updateQuery = `UPDATE ${tableName} 
+                      SET 
+                        member1 = CASE WHEN id = $1 AND member1 IS NULL THEN 'Applied' ELSE member1 END,
+                        member2 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NULL THEN 'Applied' ELSE member2 END,
+                        member3 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NOT NULL AND member3 IS NULL THEN 'Applied' ELSE member3 END,
+                        member4 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NOT NULL AND member3 IS NOT NULL AND member4 IS NULL THEN 'Applied' ELSE member4 END,
+                        member5 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NOT NULL AND member3 IS NOT NULL AND member4 IS NOT NULL AND member5 IS NULL THEN 'Applied' ELSE member5 END,
+                        member6 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NOT NULL AND member3 IS NOT NULL AND member4 IS NOT NULL AND member5 IS NOT NULL AND member6 IS NULL THEN 'Applied' ELSE member6 END
+                      WHERE id = $1`;
+        break;
+
+      default:
+        throw new Error('Invalid room category');
+    }
+
+    // Use a subquery to update only the first null value
+    const result = await client.query(updateQuery, [roomId]);
+
+    // Check if any row was affected
+    if (result.rowCount > 0) {
+      res.json({ success: true, message: 'Booking applied successfully!' });
+    } else {
+      res.status(404).json({ success: false, message: 'Room not found' });
+    }
+
+    client.release();
+  } catch (error) {
+    console.error('Error applying for booking:', error.message);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+});
+
+
+
+// API endpoint to store room allocation applications
+app.post('/api/storeRoomAllocationApplication', async (req, res) => {
+  try {
+    const { rollNumber, selectedRoomCategory, roomId } = req.body;
+
+    // Insert the application details into the "roomAllocationApplications" table
+    const result = await pool.query(
+      'INSERT INTO roomAllocationApplications (roll_number, roomCategory, roomNumber) VALUES ($1, $2, $3) RETURNING *',
+      [rollNumber, selectedRoomCategory, roomId]
+    );
+
+    // Check if the insertion was successful
+    if (result.rows.length > 0) {
+      res.json({ success: true, message: 'Application stored successfully!' });
+    } else {
+      res.status(500).json({ success: false, message: 'Failed to store application' });
+    }
+  } catch (error) {
+    console.error('Error storing room allocation application:', error.message);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+});
+
+
+
+
+// app.post('/api/applyForBooking', async (req, res) => {
+//   const { roomId, selectedRoomCategory } = req.body;
+
+//   try {
+//     const client = await pool.connect();
+
+//     // Find the selected room based on the room ID and category
+//     let tableName;
+//     switch (selectedRoomCategory) {
+//       case 'single':
+//         tableName = 'singleseater';
+//         break;
+//       case 'double':
+//         tableName = 'twoseaterroom';
+//         break;
+//       case 'shared':
+//         tableName = 'sharedrooms';
+//         break;
+//       default:
+//         throw new Error('Invalid room category');
+//     }
+
+//     // Use a subquery to update only the first null value
+//     const result = await client.query(
+//       `UPDATE ${tableName} 
+//        SET 
+//          member1 = CASE WHEN id = $1 AND member1 IS NULL THEN 'Applied' ELSE member1 END,
+//          member2 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NULL THEN 'Applied' ELSE member2 END,
+//          member3 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NOT NULL AND member3 IS NULL THEN 'Applied' ELSE member3 END,
+//          member4 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NOT NULL AND member3 IS NOT NULL AND member4 IS NULL THEN 'Applied' ELSE member4 END,
+//          member5 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NOT NULL AND member3 IS NOT NULL AND member4 IS NOT NULL AND member5 IS NULL THEN 'Applied' ELSE member5 END,
+//          member6 = CASE WHEN id = $1 AND member1 IS NOT NULL AND member2 IS NOT NULL AND member3 IS NOT NULL AND member4 IS NOT NULL AND member5 IS NOT NULL AND member6 IS NULL THEN 'Applied' ELSE member6 END
+//        WHERE id = $1`,
+//       [roomId]
+//     );
+
+//     // Check if any row was affected
+//     if (result.rowCount > 0) {
+//       res.json({ success: true, message: 'Booking applied successfully!' });
+//     } else {
+//       res.status(404).json({ success: false, message: 'Room not found' });
+//     }
+
+//     client.release();
+//   } catch (error) {
+//     console.error('Error applying for booking:', error.message);
+//     res.status(500).json({ success: false, message: 'Internal Server Error' });
+//   }
+// });
+
+// ... (rest of the server code)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

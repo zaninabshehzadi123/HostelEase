@@ -14,11 +14,11 @@
 //     console.log('handleLogin function is called.');
 
 //     try {
-//       const response = await axios.post('http://192.168.137.1:8081/api/login', {
-//   email,
-//   password,
-// });
-
+//       // Send login request
+//       const response = await axios.post('http://192.168.43.185:8081/api/login', {
+//         email,
+//         password,
+//       });
 
 //       console.log('Server response received.');
 
@@ -27,9 +27,25 @@
 //       console.log('Server response:', result);
 
 //       if (result.success) {
-//         console.log('Login successful. Navigating to MainPage...');
-//         Alert.alert('Login successful');
-//         props.navigation.navigate('MainPage');
+//         console.log('Login successful. Calling API to extract digits...');
+
+//         try {
+//           // Call the /api/extractDigits API to get the extracted value
+//           const digitsResponse = await axios.get(
+//             `http://192.168.43.185:8081/api/extractDigits?email=${email}`
+//           );
+
+//           const extractedDigits = digitsResponse.data.extractedDigits;
+
+//           // Show the extracted digits in an alert
+//           Alert.alert(`Your Batch is: ${extractedDigits}`);
+
+//           // Navigate to the MainPage after successful login and API call
+//           props.navigation.navigate('MainPage', { email, extractedDigits });
+//         } catch (error) {
+//           console.error('Error extracting digits', error);
+//           Alert.alert('Error', 'An error occurred while extracting digits.');
+//         }
 //       } else {
 //         console.log('Login failed. Showing alert...');
 //         Alert.alert('Login failed', result.message);
@@ -39,7 +55,6 @@
 //       Alert.alert('Error', 'An error occurred during login.');
 //     }
 //   };
-
 
 //   return (
 //     <Background>
@@ -121,8 +136,6 @@
 // export default Login;
 
 
-
-
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import Background from './Background';
@@ -140,7 +153,7 @@ const Login = (props) => {
 
     try {
       // Send login request
-      const response = await axios.post('http://192.168.137.1:8081/api/login', {
+      const response = await axios.post('http://192.168.43.185:8081/api/login', {
         email,
         password,
       });
@@ -157,7 +170,7 @@ const Login = (props) => {
         try {
           // Call the /api/extractDigits API to get the extracted value
           const digitsResponse = await axios.get(
-            `http://192.168.137.1:8081/api/extractDigits?email=${email}`
+            `http://192.168.43.185:8081/api/extractDigits?email=${email}`
           );
 
           const extractedDigits = digitsResponse.data.extractedDigits;
