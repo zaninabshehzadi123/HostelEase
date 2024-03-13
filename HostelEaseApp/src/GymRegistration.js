@@ -1,25 +1,146 @@
-// GymRegistration.js
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import Btn from './Btn';
+// import React, { useState } from 'react';
+// import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+// import axios from 'axios';
 
-const GymRegistration = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [selectedTime, setSelectedTime] = useState(null);
+// const GymRegistration = ({ route, navigation }) => {
+//   const { email, rollNumber } = route.params || {};
+//   const [batch, setBatch] = useState(email.substring(1, 3));
 
-  const gymTimes = [
-    { label: 'Morning', value: 'morning' },
-    { label: 'Afternoon', value: 'afternoon' },
-    { label: 'Evening', value: 'evening' },
-  ];
+//   const handleRegister = async () => {
+//     console.log('Came');
+//     try {
+//       const response = await axios.post('http://192.168.43.185:8081/api/gymRegistration', {
+//         email,
+//         rollNumber,
+//         batch
+//       });
 
-  const handleRegister = () => {
-    // Handle the registration logic here
-    // You can send the data to the server or perform any other actions
-    console.log('Registering for the gym:', { name, email, phoneNumber, selectedTime });
+//       if (response.data.success) {
+//         // Navigate to MainPage if registration successful
+//         navigation.navigate('MainPage');
+//       } else {
+//         Alert.alert('Registration Failed', response.data.message);
+//       }
+//     } catch (error) {
+//       console.error('Error registering for gym: ', error);
+//       Alert.alert('Error', 'An error occurred while registering for gym');
+//     }
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <Text style={styles.heading}>Gym Registration</Text>
+
+//       {/* Input Fields */}
+//       <View style={styles.inputContainer}>
+//         <TextInput
+//           style={styles.input}
+//           placeholder="Email"
+//           value={email}
+//           editable={false}
+//         />
+
+//         <TextInput
+//           style={styles.input}
+//           placeholder="Roll Number"
+//           value={rollNumber}
+//           editable={false}
+//         />
+
+//         <TextInput
+//           style={styles.input}
+//           placeholder="Batch"
+//           value={batch}
+//           editable={false}
+//         />
+//       </View>
+
+//       {/* Register Button */}
+//       <TouchableOpacity
+//         style={[styles.button, { backgroundColor: 'darkgreen' }]}
+//         onPress={handleRegister}
+//       >
+//         <Text style={[styles.buttonText, { color: 'white' }]}>Register</Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   heading: {
+//     fontSize: 30,
+//     fontWeight: 'bold',
+//     color: 'black',
+//     marginBottom: 20,
+//   },
+//   inputContainer: {
+//     width: '80%',
+//   },
+//   input: {
+//     height: 40,
+//     width: '100%',
+//     borderColor: 'gray',
+//     borderWidth: 1,
+//     marginBottom: 20,
+//     paddingHorizontal: 10,
+//     borderRadius: 5,
+//   },
+//   button: {
+//     width: '80%',
+//     height: 50,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     borderRadius: 5,
+//   },
+//   buttonText: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//   },
+// });
+
+// export default GymRegistration;
+
+
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import axios from 'axios';
+
+const GymRegistration = ({ route, navigation }) => {
+  const { email, rollNumber } = route.params || {};
+  const [batch, setBatch] = useState('');
+
+  // Update batch state when email changes
+useEffect(() => {
+  if (email) {
+    setBatch(email.slice(1, 3));
+  }
+}, [email]);
+
+
+  const handleRegister = async () => {
+    console.log('Came');
+    try {
+      const response = await axios.post('http://192.168.43.185:8081/api/gymRegistration', {
+        email,
+        rollNumber,
+        batch
+      });
+
+      if (response.data.success) {
+        // Navigate to MainPage if registration successful
+        navigation.navigate('MainPage', { email, batch });
+      } else {
+        Alert.alert('Registration Failed', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error registering for gym: ', error);
+      Alert.alert('Error', 'An error occurred while registering for gym');
+    }
   };
 
   return (
@@ -30,43 +151,34 @@ const GymRegistration = () => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Full Name"
-          value={name}
-          onChangeText={(text) => setName(text)}
-        />
-
-        <TextInput
-          style={styles.input}
           placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          keyboardType="email-address"
+          value={email || ''}
+          editable={false}
         />
 
         <TextInput
           style={styles.input}
-          placeholder="Phone Number"
-          value={phoneNumber}
-          onChangeText={(text) => setPhoneNumber(text)}
-          keyboardType="phone-pad"
+          placeholder="Roll Number"
+          value={rollNumber || ''}
+          editable={false}
         />
 
-        {/* Gym Time Dropdown */}
-        <DropDownPicker
-          items={gymTimes}
-          placeholder="Select Gym Time"
-          containerStyle={styles.dropdownContainer}
-          onChangeItem={(item) => setSelectedTime(item.value)}
+        <TextInput
+          style={styles.input}
+          placeholder="Batch"
+          value={batch}
+          editable={false}
         />
       </View>
 
       {/* Register Button */}
-      <Btn
-        bgColor="darkgreen"
-        textColor="white"
-        btnLabel="Register"
-        Press={handleRegister}
-      />
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: 'darkgreen' }]}
+        onPress={handleRegister}
+        disabled={!email} // Disable button if email is undefined
+      >
+        <Text style={[styles.buttonText, { color: 'white' }]}>Register</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -95,10 +207,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
   },
-  dropdownContainer: {
-    height: 40,
-    width: '100%',
-    marginBottom: 20,
+  button: {
+    width: '80%',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

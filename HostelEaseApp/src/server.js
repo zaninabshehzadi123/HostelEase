@@ -361,6 +361,33 @@ app.get('/api/checkRoomAllocation', async (req, res) => {
 });
 
 
+app.post('/api/gymRegistration', async (req, res) => {
+  const { email, rollNumber, batch } = req.body;
+  console.log('Registering for gym:', { email, rollNumber, batch });
+
+  try {
+    const client = await pool.connect();
+
+    // Insert data into GymRegistrationApplications table
+    const result = await client.query(
+      'INSERT INTO GymRegistrationApplications (email, rollnumber, batch) VALUES ($1, $2, $3)',
+      [email, rollNumber, batch]
+    );
+
+    client.release();
+
+    // Check if insertion was successful
+    if (result.rowCount > 0) {
+      res.status(200).json({ success: true, message: 'Registered for gym successfully' });
+    } else {
+      res.status(500).json({ success: false, message: 'Error registering for gym' });
+    }
+  } catch (error) {
+    console.error('Error inserting data into database:', error.message);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
+
 
 
 
