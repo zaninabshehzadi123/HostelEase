@@ -10,6 +10,8 @@ import ConsultationPage from './src/ConsultationPage';
 import RoomAllocation from './src/RoomAllocation';
 import RoomAllocationScreen2 from './src/RoomAllocationScreen2';
 import RoomAllocationStatus from './src/RoomAllocationStatus';
+import GymRegistration from './src/GymRegistration';
+import ComplaintBox from './src/ComplaintBox';
 
 const Stack = createNativeStackNavigator();
 function App() {
@@ -25,6 +27,8 @@ function App() {
         <Stack.Screen name="RoomAllocation" component={RoomAllocation} />
         <Stack.Screen name="RoomAllocationScreen2" component={RoomAllocationScreen2} />
         <Stack.Screen name="RoomAllocationStatus" component={RoomAllocationStatus} />
+        <Stack.Screen name="GymRegistration" component={GymRegistration} />
+        <Stack.Screen name="ComplaintBox" component={ComplaintBox} />
       </Stack.Navigator>
     </NavigationContainer>
   );

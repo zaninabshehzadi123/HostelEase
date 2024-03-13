@@ -327,6 +327,46 @@ app.post('/api/storeRoomAllocationApplication', async (req, res) => {
 
 // ... (rest of the server code)
 
+
+app.get('/api/checkRoomAllocation', async (req, res) => {
+  const { rollNumber } = req.query;
+
+  try {
+    // Check in BookedStudents table
+    const bookedStudentsResult = await pool.query(
+      'SELECT * FROM BookedStudents WHERE rollnumber = $1',
+      [rollNumber]
+    );
+
+    if (bookedStudentsResult.rows.length > 0) {
+      return res.status(200).json({ message: 'You have already booked a seat.' });
+    }
+
+    // Check in roomallocationappplications table
+    const roomAllocationResult = await pool.query(
+      'SELECT * FROM roomallocationappplications WHERE roll_number = $1',
+      [rollNumber]
+    );
+
+    if (roomAllocationResult.rows.length > 0) {
+      return res.status(200).json({ message: 'Your request is under consideration.' });
+    }
+
+    // If rollNumber is not found in any table
+    res.status(200).json({ message: 'Proceed to room allocation.' });
+  } catch (error) {
+    console.error('Error checking room allocation:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
+
+
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
