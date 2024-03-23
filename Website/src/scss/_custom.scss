@@ -1,0 +1,27 @@
+// Here you can add other styles
+// _custom.scss
+
+.student-form-container {
+    // Your container styles
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+form {
+    // Your form styles
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+}
+
+.popup {
+    // Your popup styles
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+}

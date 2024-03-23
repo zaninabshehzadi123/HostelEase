@@ -1,0 +1,42 @@
+.formDiv {
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #f5f5f5;
+}
+
+.showError {
+    border: 1px solid rgb(245, 137, 137);
+}
+
+label {
+    display: block;
+    margin-bottom: 4x;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: rgb(69, 113, 160);
+}
+
