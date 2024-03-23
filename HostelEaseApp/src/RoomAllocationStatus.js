@@ -1,50 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute
+import axios from 'axios'; // Import axios module
 
 const RoomAllocationStatus = () => {
   const navigation = useNavigation();
+  const route = useRoute(); // Use useRoute hook to access route object
+  const [allotmentDetails, setAllotmentDetails] = useState([]);
+  const { rollNumber } = route.params || {};
+
+  useEffect(() => {
+    fetchAllotmentDetails();
+  }, []);
+
+  const fetchAllotmentDetails = async () => {
+    try {
+      const response = await axios.get(`http://192.168.137.1:8081/api/getAllotmentDetails/${rollNumber}`);
+      // Extract member names from response data
+      const members = Object.values(response.data).filter(value => typeof value === 'string');
+      setAllotmentDetails(members);
+    } catch (error) {
+      console.error('Error fetching allotment details:', error);
+    }
+  };
+
   return (
-      <View style={styles.container}>
-        <Text style={styles.heading}>Room Allotment Status</Text>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Room Allotment Status</Text>
 
-        {/* Status Bar */}
-        <View style={styles.statusContainer}>
-          <View style={styles.statusItem}>
-            <Text style={styles.statusLabel}>Pending</Text>
-            <Text style={styles.statusIndicator}>o</Text>
-          </View>
-          <View style={styles.statusItem}>
-            <Text style={styles.statusLabel}>Processing</Text>
-            <Text style={styles.statusIndicator}>o</Text>
-          </View>
-          <View style={styles.statusItem}>
-            <Text style={styles.statusLabel}>Complete</Text>
-            <Text style={styles.statusIndicator}>o</Text>
-          </View>
-        </View>
 
-        {/* Allotment Details Heading */}
-        <Text style={styles.subHeading}>Allotment Details</Text>
+      {/* Allotment Details Heading */}
+      <Text style={styles.subHeading}>Room Members</Text>
 
-        {/* Allotment Details Container */}
-        <View style={styles.detailsContainer}>
-          {/* Add content for allotment details here */}
-        </View>
-
-        {/* Back Button */}
-        <Btn
-          bgColor="darkgreen"
-          textColor="white"
-          btnLabel="Back"
-          Press={() => {
-            navigation.navigate('RoomAllocationScreen2')
-            // Handle navigation or further actions here
-          }}
-        />
+      {/* Allotment Details Container */}
+      <View style={styles.detailsContainer}>
+        {allotmentDetails.map((member, index) => (
+          <Text key={index}>{member}</Text>
+        ))}
       </View>
+    </View>
   );
 };
 

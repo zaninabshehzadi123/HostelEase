@@ -25,7 +25,7 @@
 //   }, [rollNumber]); // Run checkRoomAllocation only when rollNumber changes
 //   const checkRoomAllocation = async () => {
 //     try {
-//       const response = await axios.get('http://192.168.43.185:8081/api/checkRoomAllocation', {
+//       const response = await axios.get('http://192.168.137.1:8081/api/checkRoomAllocation', {
 //         params: { rollNumber },
 //       });
 //       console.log('Came inside checkRoomAllocation');
@@ -133,9 +133,6 @@
 
 // export default MainPage;
 
-
-
-
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import Background from './Background';
@@ -158,48 +155,65 @@ const MainPage = ({ route, navigation }) => {
 
   const [allocationChecked, setAllocationChecked] = React.useState(false);
 
-  useEffect(() => {
-    checkRoomAllocation();
-  }, [rollNumber]); // Run checkRoomAllocation only when rollNumber changes
-
   const checkRoomAllocation = async () => {
     try {
-      const response = await axios.get('http://192.168.43.185:8081/api/checkRoomAllocation', {
+      const response = await axios.get('http://192.168.137.1:8081/api/checkRoomAllocation', {
         params: { rollNumber },
       });
-      console.log('Came inside checkRoomAllocation');
       const responseData = response.data;
-
       if (responseData && responseData.message) {
-        alert(responseData.message);
+        navigation.navigate('RoomAllocationStatus', { rollNumber });
       } else if (responseData && responseData.toString().length === 7) {
-        // If response is a 7-digit string, don't open the screen
         console.log('Response is 7 digits, not opening Room Allocation screen');
       } else {
-        setAllocationChecked(true); // Allow navigation if response is empty or not 7 digits
+        setAllocationChecked(true);
       }
     } catch (error) {
       setAllocationChecked(true);
     }
   };
 
-  const navigateToGymRegistrationScreen = () => {
-    navigation.navigate('GymRegistration', { email, rollNumber, extractedDigits });
+  const checkGymRegistration = async () => {
+    try {
+      const response = await axios.get('http://192.168.137.1:8081/api/checkGymRegistration', {
+        params: { rollNumber },
+      });
+      const responseData = response.data;
+
+      if (responseData.exists) {
+        alert('Already Registered', 'You have already booked for Gym.');
+      } else {
+        navigation.navigate('GymRegistration', {email, rollNumber });
+      }
+    } catch (error) {
+      console.error('Error checking gym registration:', error);
+    }
   };
 
-  const handleModulePress = (screen) => {
+  const handleModulePress = async (screen) => {
     if (screen === 'RoomAllocation') {
-      if (allocationChecked) {
-        navigation.navigate(screen, { email, extractedDigits, rollNumber });
+      if (!allocationChecked) {
+        checkRoomAllocation();
+        setAllocationChecked(false);
       } else {
-        checkRoomAllocation(); // Trigger API call within handleModulePress
+        navigation.navigate(screen, { email, extractedDigits, rollNumber });
       }
     } else if (screen === 'GymRegistration') {
-      navigateToGymRegistrationScreen();
-    } else {
+      await checkGymRegistration();
+    } else if(screen === 'MessRegistration') {
+      navigation.navigate(item.screen, { email: email });
+    }else {
       navigation.navigate(screen);
     }
   };
+
+  // const handleNavigation = (item) => {
+  //   if (item.screen === 'MessRegistration') {
+  //     navigation.navigate(item.screen, { email: email });
+  //   } else {
+  //     navigation.navigate(item.screen);
+  //   }
+  // };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleModulePress(item.screen)}>
@@ -210,7 +224,7 @@ const MainPage = ({ route, navigation }) => {
   return (
     <Background>
       <View style={styles.container}>
-        <Text style={styles.title}>Hostel Dashboard Here</Text>
+        <Text style={styles.title}>Hostel Dashboard</Text>
         <Text style={styles.emailText}>{email}</Text>
         <Text style={styles.emailText}>{`Roll Number: ${rollNumber}`}</Text>
         <FlatList

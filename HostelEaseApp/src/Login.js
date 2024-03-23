@@ -15,7 +15,7 @@
 
 //     try {
 //       // Send login request
-//       const response = await axios.post('http://192.168.43.185:8081/api/login', {
+//       const response = await axios.post('http://192.168.137.1:8081/api/login', {
 //         email,
 //         password,
 //       });
@@ -32,7 +32,7 @@
 //         try {
 //           // Call the /api/extractDigits API to get the extracted value
 //           const digitsResponse = await axios.get(
-//             `http://192.168.43.185:8081/api/extractDigits?email=${email}`
+//             `http://192.168.137.1:8081/api/extractDigits?email=${email}`
 //           );
 
 //           const extractedDigits = digitsResponse.data.extractedDigits;
@@ -153,7 +153,7 @@ const Login = (props) => {
 
     try {
       // Send login request
-      const response = await axios.post('http://192.168.43.185:8081/api/login', {
+      const response = await axios.post('http://192.168.137.1:8081/api/login', {
         email,
         password,
       });
@@ -170,7 +170,7 @@ const Login = (props) => {
         try {
           // Call the /api/extractDigits API to get the extracted value
           const digitsResponse = await axios.get(
-            `http://192.168.43.185:8081/api/extractDigits?email=${email}`
+            `http://192.168.137.1:8081/api/extractDigits?email=${email}`
           );
 
           const extractedDigits = digitsResponse.data.extractedDigits;

@@ -12,6 +12,9 @@ import RoomAllocationScreen2 from './src/RoomAllocationScreen2';
 import RoomAllocationStatus from './src/RoomAllocationStatus';
 import GymRegistration from './src/GymRegistration';
 import ComplaintBox from './src/ComplaintBox';
+import MessRegistration from './src/MessRegistration';
+import DayMenu from './src/DayMenu';
+
 
 const Stack = createNativeStackNavigator();
 function App() {
@@ -29,6 +32,8 @@ function App() {
         <Stack.Screen name="RoomAllocationStatus" component={RoomAllocationStatus} />
         <Stack.Screen name="GymRegistration" component={GymRegistration} />
         <Stack.Screen name="ComplaintBox" component={ComplaintBox} />
+        <Stack.Screen name="MessRegistration" component={MessRegistration} />
+        <Stack.Screen name="DayMenu" component={DayMenu} />
       </Stack.Navigator>
     </NavigationContainer>
   );

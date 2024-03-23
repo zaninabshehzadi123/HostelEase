@@ -18,12 +18,12 @@
 //       try {
 //         let response;
 //         if (selectedRoomCategory === 'single') {
-//           response = await axios.get('http://192.168.43.185:8081/api/singleSeaterRoom');
+//           response = await axios.get('http://192.168.137.1:8081/api/singleSeaterRoom');
 //         } else {
 //           response = await axios.get(
 //             selectedRoomCategory === 'double'
-//               ? 'http://192.168.43.185:8081/api/twoSeaterRoom'
-//               : 'http://192.168.43.185:8081/api/sharedrooms'
+//               ? 'http://192.168.137.1:8081/api/twoSeaterRoom'
+//               : 'http://192.168.137.1:8081/api/sharedrooms'
 //           );
 //         }
 //         console.log('Data fetched from the server:', response.data);
@@ -149,12 +149,12 @@ const RoomAllocationScreen2 = () => {
       try {
         let response;
         if (selectedRoomCategory === 'single') {
-          response = await axios.get('http://192.168.43.185:8081/api/singleSeaterRoom');
+          response = await axios.get('http://192.168.137.1:8081/api/singleSeaterRoom');
         } else {
           response = await axios.get(
             selectedRoomCategory === 'double'
-              ? 'http://192.168.43.185:8081/api/twoSeaterRoom'
-              : 'http://192.168.43.185:8081/api/sharedrooms'
+              ? 'http://192.168.137.1:8081/api/twoSeaterRoom'
+              : 'http://192.168.137.1:8081/api/sharedrooms'
           );
         }
         console.log('Data fetched from the server:', response.data);
@@ -170,7 +170,7 @@ const RoomAllocationScreen2 = () => {
 
   // const applyForBooking = async () => {
   //   try {
-  //     const response = await axios.post('http://192.168.43.185:8081/api/applyForBooking', {
+  //     const response = await axios.post('http://192.168.137.1:8081/api/applyForBooking', {
   //       roomId: parseInt(selectedValue), // Assuming selectedValue is the room ID
   //       selectedRoomCategory,
   //     });
@@ -187,7 +187,7 @@ const RoomAllocationScreen2 = () => {
 
   const applyForBooking = async () => {
     try {
-      const responseApply = await axios.post('http://192.168.43.185:8081/api/applyForBooking', {
+      const responseApply = await axios.post('http://192.168.137.1:8081/api/applyForBooking', {
         roomId: parseInt(selectedValue),
         selectedRoomCategory,
       });
@@ -195,7 +195,7 @@ const RoomAllocationScreen2 = () => {
       // Handle the response for applyForBooking API
       Alert.alert('Application Status', responseApply.data.message);
 
-      const responseStore = await axios.post('http://192.168.43.185:8081/api/storeRoomAllocationApplication', {
+      const responseStore = await axios.post('http://192.168.137.1:8081/api/storeRoomAllocationApplication', {
         rollNumber,
         selectedRoomCategory,
         roomId: parseInt(selectedValue),

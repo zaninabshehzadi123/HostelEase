@@ -387,11 +387,223 @@ app.post('/api/gymRegistration', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
+app.get('/api/checkGymRegistration', async (req, res) => {
+  const { rollNumber } = req.query;
+  console.log('Checking gym registration for roll number:', rollNumber);
+
+  try {
+    const client = await pool.connect();
+
+    // Query to check if the roll number exists in the GymRegistrationApplications table
+    const result = await client.query(
+      'SELECT COUNT(*) FROM registeredstudentsforgym WHERE rollnumber = $1',
+      [rollNumber]
+    );
+
+    client.release();
+
+    // Check if any rows were found with the given roll number
+    const count = parseInt(result.rows[0].count);
+    if (count > 0) {
+      res.status(200).json({ exists: true, message: 'You have already booked for Gym' });
+    } else {
+      res.status(200).json({ exists: false, message: 'You can proceed with gym registration' });
+    }
+  } catch (error) {
+    console.error('Error checking gym registration:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.get('/api/getAllotmentDetails/:rollNumber', async (req, res) => {
+  const { rollNumber } = req.params;
+  console.log('Fetching allotment details for roll number:', rollNumber);
+
+  try {
+    const client = await pool.connect();
+
+    // Query to fetch room category and room number based on roll number from bookedstudents table
+    const allotmentQuery = `
+      SELECT roomcategory, roomnumber 
+      FROM bookedstudents 
+      WHERE rollnumber = $1
+    `;
+    const allotmentResult = await client.query(allotmentQuery, [rollNumber]);
+    console.log(allotmentResult)
+    if (allotmentResult.rows.length > 0) {
+      const { roomcategory, roomnumber } = allotmentResult.rows[0];
+      let tableName;
+      if (roomcategory === 'shared') {
+        tableName = 'sharedrooms';
+      } else if (roomcategory === 'double') {
+        tableName = 'twoseaterroom';
+      } else if (roomcategory === 'single') {
+        tableName = 'singleseater';
+      }
+      // Query to fetch room details based on room category and room number from corresponding table
+      const roomDetailsQuery = `
+        SELECT * 
+        FROM ${tableName} 
+        WHERE id = $1
+      `;
+      const roomDetailsResult = await client.query(roomDetailsQuery, [roomnumber]);
+
+      if (roomDetailsResult.rows.length > 0) {
+        const roomDetails = roomDetailsResult.rows[0];
+        res.status(200).json(roomDetails);
+      } else {
+        res.status(404).json({ message: 'Room details not found' });
+      }
+    } else {
+      res.status(404).json({ message: 'Allotment details not found' });
+    }
+
+    client.release();
+  } catch (error) {
+    console.error('Error fetching allotment details:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+// API endpoint to fetch meals for a specific day
+app.get('/api/meals/:day', async (req, res) => {
+  const { day } = req.params;
+  console.log(day);
+  console.log('entered');
+  try {
+    // Execute SQL query to select meals for the specified day
+    const result = await pool.query('SELECT * FROM meal WHERE Days = $1', [day]);
+console.log(result);
+    // Send the selected meals as a JSON response
+    res.json({ success: true, meals: result.rows });
+    
+  } catch (error) {
+    console.error('Error fetching meals:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
 
 
 
+// API endpoint to book meals
+app.post('/api/book-meal', async (req, res) => {
+  const { rollNumber, day, breakfast, lunch, dinner } = req.body;
+  console.log("Enter in API");
+
+  try {
+    // Check if a booking exists for the given roll number and day
+    const existingBooking = await pool.query(
+      'SELECT * FROM booked_meal WHERE rollnumber = $1 AND BookingDay = $2',
+      [rollNumber, day]
+    );
+
+    if (existingBooking.rows.length > 0) {
+      // If a booking exists, update the existing row
+      let updatedMeals = {};
+      if (typeof breakfast !== 'undefined') updatedMeals.breakfast = breakfast;
+      if (typeof lunch !== 'undefined') updatedMeals.lunch = lunch;
+      if (typeof dinner !== 'undefined') updatedMeals.dinner = dinner;
+
+      const updateResult = await pool.query(
+        'UPDATE booked_meal SET breakfast = COALESCE($1, breakfast), lunch = COALESCE($2, lunch), dinner = COALESCE($3, dinner) WHERE rollnumber = $4 AND BookingDay = $5',
+        [breakfast, lunch, dinner, rollNumber, day]
+      );
+
+      // Send a success response
+      res.json({ success: true, message: 'Meal updated successfully' });
+    } else {
+      // If no booking exists, insert a new row for the booking
+      const insertResult = await pool.query(
+        'INSERT INTO booked_meal (rollnumber, BookingDay, breakfast, lunch, dinner) VALUES ($1, $2, $3, $4, $5)',
+        [rollNumber, day, breakfast, lunch, dinner]
+      );
+
+      // Send a success response
+      res.json({ success: true, message: 'Meal booked successfully' });
+    }
+  } catch (error) {
+    console.error('Error booking meal:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
+
+// Endpoint to fetch booked days
+app.get('/booked-days/:rollnumber', async (req, res) => {
+  const { rollnumber } = req.params;
+
+  try {
+    // Fetch booked days data for the specific rollnumber from the database
+    const result = await pool.query('SELECT DISTINCT bookingday FROM booked_meal WHERE rollnumber = $1', [rollnumber]);
+    const bookedDays = result.rows.map(row => row.bookingday);
+    console.log(bookedDays);
+    res.json(bookedDays);
+  } catch (error) {
+    console.error('Error fetching booked days:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// API endpoint to unbook a meal
+app.delete('/api/unbook-meal/:rollNumber/:day', async (req, res) => {
+  console.log('Entered for unbook');
+  const { rollNumber, day } = req.params;
+  console.log("Unbooking meal for roll number:", rollNumber, "on day:", day);
+  try {
+    // Execute SQL query to delete the booked meal from the database
+    const result = await pool.query(
+      'DELETE FROM booked_meal WHERE rollnumber = $1 AND BookingDay = $2',
+      [rollNumber, day]
+    );
+
+    // Check if any rows were affected by the delete operation
+    if (result.rowCount > 0) {
+      // Send a success response
+      res.json({ success: true, message: 'Meal unbooked successfully' });
+    } else {
+      // If no rows were affected, the meal was not booked for the specified roll number and day
+      res.status(404).json({ success: false, message: 'No booking found for the provided roll number and day' });
+    }
+  } catch (error) {
+    console.error('Error unbooking meal:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
 
 
+
+// API endpoint to check booked meals for a specific day and roll number
+app.get('/api/check-booked-meals/:rollNumber/:day', async (req, res) => {
+  const { rollNumber, day } = req.params;
+  console.log('Checking the true value');
+  console.log('Roll number: ', rollNumber);
+  console.log('Booking Day: ', day);
+  try {
+    // Execute SQL query to check if the specified day and roll number exist in booked_meal table
+    const result = await pool.query(
+      'SELECT ' +
+        'CASE WHEN breakfast THEN \'true\' ELSE NULL END AS breakfast, ' +
+        'CASE WHEN lunch THEN \'true\' ELSE NULL END AS lunch, ' +
+        'CASE WHEN dinner THEN \'true\' ELSE NULL END AS dinner ' +
+      'FROM booked_meal ' +
+      'WHERE rollnumber = $1 AND BookingDay = $2',
+      [rollNumber, day]
+    );
+
+    // Check if any row is found
+    if (result.rows.length > 0) {
+      // If row found, send the meal selections as a JSON response
+      const { breakfast, lunch, dinner } = result.rows[0];
+      res.json({ success: true, bookedMeals: { breakfast, lunch, dinner } });
+    } else {
+      // If no row found, send an empty response
+      res.json({ success: false, message: 'No booked meals found for the specified roll number and day' });
+    }
+  } catch (error) {
+    console.error('Error checking booked meals:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
 
 
 app.listen(port, () => {
